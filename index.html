@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Pizza Panic Deluxe</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', sans-serif;
+      background-color: #ffe5b4;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      color: tomato;
+      font-size: 3em;
+    }
+    #pizza {
+      width: 200px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    #pizza:hover {
+      transform: scale(1.1);
+    }
+    #message, #score, #timer, #secret {
+      font-size: 1.4em;
+      margin-top: 15px;
+    }
+    button {
+      background-color: tomato;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🍕 Pizza Panic Deluxe</h1>
+  <p>Klik snel op pizza’s zonder ananas! 🍍 = FAIL.</p>
+  <div id="score">Score: 0</div>
+  <div id="timer">⏱️ Tijd: 30</div>
+  <img id="pizza" src="" alt="Pizza">
+  <div id="message"></div>
+  <div id="secret" style="display: none;">🧙‍♂️ Je bent een ware pizzameester, Ryan!</div>
+  <button onclick="startGame()">Start opnieuw</button>
+
+  <audio id="ding" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+  <audio id="fail" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"></audio>
+
+  <script>
+    const pizzaImg = document.getElementById("pizza");
+    const message = document.getElementById("message");
+    const scoreDisplay = document.getElementById("score");
+    const timerDisplay = document.getElementById("timer");
+    const secretMessage = document.getElementById("secret");
+    const ding = document.getElementById("ding");
+    const fail = document.getElementById("fail");
+
+    let score = 0;
+    let hasPineapple = false;
+    let gameOver = false;
+    let timeLeft = 30;
+    let timer;
+
+    const goodPizza = "https://upload.wikimedia.org/wikipedia/commons/d/d3/Supreme_pizza.jpg";
+    const badPizza = "https://upload.wikimedia.org/wikipedia/commons/7/7d/Pizza_with_pineapple.jpg";
+
+    function randomPizza() {
+      hasPineapple = Math.random() < 0.3;
+      pizzaImg.src = hasPineapple ? badPizza : goodPizza;
+    }
+
+    pizzaImg.onclick = () => {
+      if (gameOver) return;
+
+      if (hasPineapple) {
+        message.textContent = "GAME OVER! Je hebt op ananas geklikt!";
+        fail.play();
+        clearInterval(timer);
+        gameOver = true;
+      } else {
+        ding.play();
+        score++;
+        scoreDisplay.textContent = "Score: " + score;
+        message.textContent = "Lekker bezig!";
+        if (score === 10) {
+          secretMessage.style.display = "block";
+        }
+        randomPizza();
+      }
+    };
+
+    function startGame() {
+      score = 0;
+      gameOver = false;
+      timeLeft = 30;
+      message.textContent = "";
+      secretMessage.style.display = "none";
+      scoreDisplay.textContent = "Score: 0";
+      timerDisplay.textContent = "⏱️ Tijd: 30";
+      randomPizza();
+      clearInterval(timer);
+      timer = setInterval(() => {
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          gameOver = true;
+          message.textContent = "Tijd is op! Eindscore: " + score;
+        } else {
+          timeLeft--;
+          timerDisplay.textContent = "⏱️ Tijd: " + timeLeft;
+        }
+      }, 1000);
+    }
+
+    window.onload = startGame;
+  </script>
+</body>
+</html>
