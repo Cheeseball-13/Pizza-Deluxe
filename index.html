@@ -90,7 +90,7 @@
         if (score === 10) {
           secretMessage.style.display = "block";
         }
-        randomPizza();
+        randomPizza();  // Zorg ervoor dat de pizza weer opnieuw wordt gekozen
       }
     };
 
@@ -102,7 +102,7 @@
       secretMessage.style.display = "none";
       scoreDisplay.textContent = "Score: 0";
       timerDisplay.textContent = "⏱️ Tijd: 30";
-      randomPizza();
+      randomPizza();  // Zorg ervoor dat de pizza wordt getoond bij het starten van het spel
       clearInterval(timer);
       timer = setInterval(() => {
         if (timeLeft <= 0) {
